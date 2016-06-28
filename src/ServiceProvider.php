@@ -52,7 +52,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         if (config('query_logger.enabled', config('app.debug'))) {
-            $streamHandler = new StreamHandler(config('query_logger.file_path'), Logger::INFO);
+            $streamHandler = new StreamHandler(config('query_logger.file_path', storage_path('logs/query_logger.php')), Logger::INFO);
             $streamHandler->setFormatter(new LineFormatter("%message%;\n"));
             $this->logger = new Logger('sql');
             $this->logger->pushHandler($streamHandler);
