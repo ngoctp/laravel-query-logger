@@ -14,11 +14,11 @@ Then add ServiceProvider to the providers array in config/app.php
 This should be placed before your AppServiceProvider
 
 ```
-NgocTP\QuerryLogger\ServiceProvider::class,
+NgocTP\QueryLogger\ServiceProvider::class,
 ```
 
 Copy the package config by publish command:
 
 ```
-php artisan vendor:publish --provider="NgocTP\QuerryLogger\ServiceProvider"
+php artisan vendor:publish --provider="NgocTP\QueryLogger\ServiceProvider"
 ```
