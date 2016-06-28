@@ -1,0 +1,19 @@
+{
+    "name": "ngoctp/laravel-query-logger",
+    "description": "Log database queries for Laravel project",
+	"license": "MIT",
+    "require": {
+        "laravel/framework": "~5.2"
+    },
+    "authors": [
+        {
+            "name": "Tran Phuong Ngoc",
+            "email": "phuongngoc@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "NgocTP\\QueryLogger\\": "src/"
+        }
+    }
+}
