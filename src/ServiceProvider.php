@@ -53,10 +53,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $enabled = config('query_logger.enabled');
         if (is_null($enabled) ? config('app.debug') : $enabled) {
-            $streamHandler = new StreamHandler(config('query_logger.file_path', storage_path('logs/query_logger.php')), Logger::INFO);
-            $streamHandler->setFormatter(new LineFormatter("%message%;\n"));
-            $this->logger = new Logger('sql');
-            $this->logger->pushHandler($streamHandler);
+            $filePath = config('query_logger.file_path');
+            if ($filePath) {
+                $streamHandler = new StreamHandler($filePath, Logger::INFO);
+                $streamHandler->setFormatter(new LineFormatter("%message%;\n"));
+                $this->logger = new Logger('sql');
+                $this->logger->pushHandler($streamHandler);
+            }
         }
     }
 }
