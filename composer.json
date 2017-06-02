@@ -3,7 +3,7 @@
     "description": "Log database queries for Laravel project",
 	"license": "MIT",
     "require": {
-        "laravel/framework": "^5.2"
+        "laravel/framework": "5.*"
     },
     "authors": [
         {
