@@ -18,5 +18,12 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NgocTP\\QueryLogger\\ServiceProvider"
+            ]
+        }
     }
 }
