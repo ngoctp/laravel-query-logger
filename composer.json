@@ -3,7 +3,7 @@
     "description": "Log database queries for Laravel project",
 	"license": "MIT",
     "require": {
-        "illuminate/support": "^5.2"
+        "illuminate/support": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*"
     },
     "authors": [
         {
@@ -14,6 +14,9 @@
     "autoload": {
         "psr-4": {
             "NgocTP\\QueryLogger\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     }
 }
