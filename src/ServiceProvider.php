@@ -52,27 +52,38 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->logger->info('-- ------ REQUESTED AT '. Carbon::now()->toDateTimeString() .' ------ --');
             $this->app['db']->listen(function($query, $bindings = null, $time = null, $name = null) {
                 if ($query instanceof \Illuminate\Database\Events\QueryExecuted) {
-                    $sql = $this->formatQuery($query->sql, $query->bindings, $query->connection);
+                    $formattedQuery = $this->formatQuery($query->sql, $query->bindings, $query->connection);
                 } else {
-                    $sql = $this->formatQuery($query, $bindings, $this->app['db']->connection($name));
+                    $formattedQuery = $this->formatQuery($query, $bindings, $this->app['db']->connection($name));
                 }
 
-                $this->logger->info($sql);
+                $this->logger->info($formattedQuery);
             });
         }
     }
 
     private function formatQuery($query, $bindings, $connection)
     {
-        $sqlParts = explode('?', $query);
         $bindings = $connection->prepareBindings($bindings);
+        $bindings = $this->checkBindings($bindings);
         $pdo = $connection->getPdo();
-        $sql = array_shift($sqlParts);
-        foreach ($bindings as $i => $binding) {
-            $sql .= $pdo->quote($binding) . $sqlParts[$i];
+
+        /**
+         * Replace placeholders
+         *
+         * @copyright https://github.com/barryvdh/laravel-debugbar
+         */
+        foreach ($bindings as $key => $binding) {
+            // This regex matches placeholders only, not the question marks,
+            // nested in quotes, while we iterate through the bindings
+            // and substitute placeholders by suitable values.
+            $regex = is_numeric($key)
+                ? "/\?(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/"
+                : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
+            $query = preg_replace($regex, $pdo->quote($binding), $query, 1);
         }
 
-        return $sql;
+        return $query;
     }
 
     private function isLoggerEnabled()
@@ -91,5 +102,23 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     private function getConfigPath()
     {
         return __DIR__ . '/../config/query_logger.php';
+    }
+
+    /**
+     * Check bindings for illegal (non UTF-8) strings, like Binary data.
+     *
+     * @param $bindings
+     * @return mixed
+     * @copyright https://github.com/barryvdh/laravel-debugbar
+     */
+    private function checkBindings($bindings)
+    {
+        foreach ($bindings as &$binding) {
+            if (is_string($binding) && !mb_check_encoding($binding, 'UTF-8')) {
+                $binding = '[BINARY DATA]';
+            }
+        }
+
+        return $bindings;
     }
 }
