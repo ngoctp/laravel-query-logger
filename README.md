@@ -13,7 +13,7 @@ Import package using composer:
 composer require ngoctp/laravel-query-logger --dev
 ```
 
-### Add service to Laravel 5.5
+### Add service to Laravel >=5.5
 
 There's nothing to do with Laravel 5.5, it's automatically imported by extra field defined in composer.json
 
