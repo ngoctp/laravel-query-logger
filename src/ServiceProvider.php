@@ -29,7 +29,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         if ($this->isLoggerEnabled()) {
             $filePath = config('query_logger.file_path');
             if ($filePath) {
-                $streamHandler = new StreamHandler($filePath, Logger::INFO);
+                $streamHandler = new StreamHandler($filePath, Logger::INFO, true, config('query_logger.file_permission'));
                 $streamHandler->setFormatter(new LineFormatter("%message%;\n"));
                 $this->logger = new Logger('query_logger');
                 $this->logger->pushHandler($streamHandler);
